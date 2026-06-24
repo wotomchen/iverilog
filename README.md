@@ -1,3 +1,115 @@
+# Icarus Verilog — OpenHarmony / HarmonyOS 移植版
+
+[![中文](#)](#) [![English](#)](#)
+
+---
+
+## 中文说明
+
+本项目是 **Icarus Verilog** 在 **OpenHarmony / HarmonyOS**（aarch64, musl libc）操作系统上的移植版本。
+
+### 安装路径
+
+所有编译好的二进制文件安装在 `~/.iverilog-ohos/`：
+
+| 目录 | 内容 |
+|------|------|
+| `~/.iverilog-ohos/bin/` | `iverilog`、`vvp`、`iverilog-vpi` |
+| `~/.iverilog-ohos/lib/ivl/` | 编译目标模块（.tgt）、VPI 插件（.vpi）、配置文件（.conf） |
+| `~/.iverilog-ohos/include/iverilog/` | VPI 开发头文件 |
+
+### 重要：ELF 签名要求
+
+OpenHarmony 的 Hishell 要求所有 ELF 二进制文件**必须签名**后才能执行。每次下载或编译后都需要执行：
+
+```sh
+# 签名单个 ELF 文件
+mv ~/.iverilog-ohos/bin/iverilog ~/.iverilog-ohos/bin/iverilog-unsigned && \
+binary-sign-tool sign -inFile ~/.iverilog-ohos/bin/iverilog-unsigned \
+  -outFile ~/.iverilog-ohos/bin/iverilog -selfSign "1" && \
+chmod +x ~/.iverilog-ohos/bin/iverilog
+
+mv ~/.iverilog-ohos/bin/vvp ~/.iverilog-ohos/bin/vvp-unsigned && \
+binary-sign-tool sign -inFile ~/.iverilog-ohos/bin/vvp-unsigned \
+  -outFile ~/.iverilog-ohos/bin/vvp -selfSign "1" && \
+chmod +x ~/.iverilog-ohos/bin/vvp
+```
+
+或者一键签名所有 ELF 文件：
+
+```sh
+find ~/.iverilog-ohos -type f | while read f; do
+  if file "$f" 2>/dev/null | grep -q "ELF"; then
+    mv "$f" "${f}-unsigned" 2>/dev/null
+    binary-sign-tool sign -inFile "${f}-unsigned" -outFile "$f" -selfSign "1" && \
+    chmod +x "$f" && rm -f "${f}-unsigned"
+  fi
+done
+```
+
+### 使用
+
+```sh
+export PATH="$PATH:$HOME/.iverilog-ohos/bin"
+iverilog -o test_sim test.v
+vvp test_sim
+```
+
+---
+
+## English
+
+This is a port of **Icarus Verilog** for **OpenHarmony / HarmonyOS** (aarch64, musl libc).
+
+### Install Location
+
+All pre-built binaries are installed to `~/.iverilog-ohos/`:
+
+| Directory | Contents |
+|-----------|----------|
+| `~/.iverilog-ohos/bin/` | `iverilog`, `vvp`, `iverilog-vpi` |
+| `~/.iverilog-ohos/lib/ivl/` | Target modules (.tgt), VPI plugins (.vpi), config files (.conf) |
+| `~/.iverilog-ohos/include/iverilog/` | VPI development headers |
+
+### Important: ELF Signing Required
+
+OpenHarmony's Hishell requires all ELF binaries to be **signed** before execution. After downloading or compiling, run:
+
+```sh
+# Sign a single ELF binary
+mv ~/.iverilog-ohos/bin/iverilog ~/.iverilog-ohos/bin/iverilog-unsigned && \
+binary-sign-tool sign -inFile ~/.iverilog-ohos/bin/iverilog-unsigned \
+  -outFile ~/.iverilog-ohos/bin/iverilog -selfSign "1" && \
+chmod +x ~/.iverilog-ohos/bin/iverilog
+
+mv ~/.iverilog-ohos/bin/vvp ~/.iverilog-ohos/bin/vvp-unsigned && \
+binary-sign-tool sign -inFile ~/.iverilog-ohos/bin/vvp-unsigned \
+  -outFile ~/.iverilog-ohos/bin/vvp -selfSign "1" && \
+chmod +x ~/.iverilog-ohos/bin/vvp
+```
+
+Or sign all ELF files at once:
+
+```sh
+find ~/.iverilog-ohos -type f | while read f; do
+  if file "$f" 2>/dev/null | grep -q "ELF"; then
+    mv "$f" "${f}-unsigned" 2>/dev/null
+    binary-sign-tool sign -inFile "${f}-unsigned" -outFile "$f" -selfSign "1" && \
+    chmod +x "$f" && rm -f "${f}-unsigned"
+  fi
+done
+```
+
+### Usage
+
+```sh
+export PATH="$PATH:$HOME/.iverilog-ohos/bin"
+iverilog -o test_sim test.v
+vvp test_sim
+```
+
+---
+
 # The ICARUS Verilog Compilation System
 
 Copyright 2000-2026 Stephen Williams
