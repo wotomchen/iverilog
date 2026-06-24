@@ -17,16 +17,20 @@ INSTALL_DIR="${INSTALL_DIR:-$HOME/.iverilog-ohos}"
 REPO="${REPO_URL:-https://github.com/wotomchen/iverilog/releases/download}"
 
 if [ "$VERSION" = "latest" ]; then
-  # 从 GitHub API 获取最新 release 版本号
+  # 从 GitHub API 获取最新 release 版本号（反复重试直到成功）
   echo "⏳ 获取最新版本号..."
-  LATEST=$(curl -s --connect-timeout 30 \
-    https://api.github.com/repos/wotomchen/iverilog/releases/latest \
-    | grep '"tag_name"' | sed 's/.*"tag_name": "\(.*\)",/\1/' 2>/dev/null || echo "")
-  if [ -z "$LATEST" ]; then
-    echo "❌ 无法获取最新版本，请手动指定版本号"
-    echo "   用法: sh ohos-install.sh v14.0-dev-ohos-1"
-    exit 1
-  fi
+  RETRY=1
+  while true; do
+    LATEST=$(curl -s --connect-timeout 30 --max-time 60 \
+      https://api.github.com/repos/wotomchen/iverilog/releases/latest \
+      | grep '"tag_name"' | sed 's/.*"tag_name": "\(.*\)",/\1/' 2>/dev/null || echo "")
+    if [ -n "$LATEST" ]; then
+      break
+    fi
+    echo "  获取失败 (尝试 #${RETRY})，10 秒后重试..."
+    sleep 10
+    RETRY=$((RETRY + 1))
+  done
   VERSION="$LATEST"
 fi
 
@@ -47,13 +51,19 @@ TMPDIR="${TMPDIR:-$HOME/tmp}"
 mkdir -p "$TMPDIR"
 TMP_FILE="$TMPDIR/iverilog-ohos-$$.tar.gz"
 
-# ── 下载 ──────────────────────────────────────────────────────
+# ── 下载（反复重试直到成功，中途 Ctrl+C 取消）───────────────
 echo "📥 下载 $ARCHIVE ..."
-curl -L --connect-timeout 60 -o "$TMP_FILE" "$URL" 2>&1
-if [ ! -f "$TMP_FILE" ] || [ ! -s "$TMP_FILE" ]; then
-  echo "❌ 下载失败: $URL"
-  exit 1
-fi
+RETRY=1
+while true; do
+  curl -L --connect-timeout 60 --max-time 300 -o "$TMP_FILE" "$URL" 2>&1
+  if [ -f "$TMP_FILE" ] && [ -s "$TMP_FILE" ]; then
+    break
+  fi
+  echo "  下载失败 (尝试 #${RETRY})，30 秒后重试... (按 Ctrl+C 取消)"
+  rm -f "$TMP_FILE"
+  sleep 30
+  RETRY=$((RETRY + 1))
+done
 echo "✅ 下载完成 ($(du -h "$TMP_FILE" | cut -f1))"
 
 # ── 创建安装目录 ─────────────────────────────────────────────
