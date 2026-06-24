@@ -6,7 +6,7 @@
 
 ## 中文说明
 
-本项目是 **Icarus Verilog** 在 **OpenHarmony / HarmonyOS**（aarch64, musl libc）操作系统上的移植版本。
+本项目是 **Icarus Verilog** 在 **OpenHarmony / HarmonyOS**（aarch64, musl libc）操作系统上的移植版本，可用于在鸿蒙系统中进行 **FPGA 代码仿真开发**。
 
 ### 安装路径
 
@@ -57,8 +57,6 @@ curl -L https://raw.githubusercontent.com/wotomchen/iverilog/master/ohos-install
 
 ### 使用
 
-iverilog 可用于在鸿蒙系统中进行 **FPGA 代码仿真开发**：
-
 ```sh
 export PATH="$PATH:$HOME/.iverilog-ohos/bin"
 iverilog -o test_sim test.v
@@ -69,7 +67,7 @@ vvp test_sim
 
 ## English
 
-This is a port of **Icarus Verilog** for **OpenHarmony / HarmonyOS** (aarch64, musl libc).
+This is a port of **Icarus Verilog** for **OpenHarmony / HarmonyOS** (aarch64, musl libc), enabling **FPGA simulation development** directly on HarmonyOS devices.
 
 ### Install Location
 
@@ -119,8 +117,6 @@ curl -L https://raw.githubusercontent.com/wotomchen/iverilog/master/ohos-install
 > Downloads the latest tarball, extracts to `~/.iverilog-ohos/`, and signs all ELF binaries automatically.
 
 ### Usage
-
-Use iverilog for **FPGA simulation development** on HarmonyOS:
 
 ```sh
 export PATH="$PATH:$HOME/.iverilog-ohos/bin"
