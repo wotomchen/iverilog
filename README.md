@@ -20,7 +20,7 @@
 
 ### 重要：ELF 签名要求
 
-OpenHarmony 的 Hishell 要求所有 ELF 二进制文件**必须签名**后才能执行。每次下载或编译后都需要执行：
+HarmonyOS 的 Hishell 要求所有 ELF 二进制文件**必须签名**后才能执行。每次下载或编译后都需要执行：
 
 ```sh
 # 签名单个 ELF 文件
@@ -47,7 +47,17 @@ find ~/.iverilog-ohos -type f | while read f; do
 done
 ```
 
+### 一键安装
+
+```sh
+curl -L https://raw.githubusercontent.com/wotomchen/iverilog/master/ohos-install.sh | sh
+```
+
+> 该命令会自动下载最新版压缩包、解压到 `~/.iverilog-ohos/` 并签名所有 ELF 二进制文件。
+
 ### 使用
+
+iverilog 可用于在鸿蒙系统中进行 **FPGA 代码仿真开发**：
 
 ```sh
 export PATH="$PATH:$HOME/.iverilog-ohos/bin"
@@ -73,7 +83,7 @@ All pre-built binaries are installed to `~/.iverilog-ohos/`:
 
 ### Important: ELF Signing Required
 
-OpenHarmony's Hishell requires all ELF binaries to be **signed** before execution. After downloading or compiling, run:
+HarmonyOS's Hishell requires all ELF binaries to be **signed** before execution. After downloading or compiling, run:
 
 ```sh
 # Sign a single ELF binary
@@ -100,7 +110,17 @@ find ~/.iverilog-ohos -type f | while read f; do
 done
 ```
 
+### One-line Install
+
+```sh
+curl -L https://raw.githubusercontent.com/wotomchen/iverilog/master/ohos-install.sh | sh
+```
+
+> Downloads the latest tarball, extracts to `~/.iverilog-ohos/`, and signs all ELF binaries automatically.
+
 ### Usage
+
+Use iverilog for **FPGA simulation development** on HarmonyOS:
 
 ```sh
 export PATH="$PATH:$HOME/.iverilog-ohos/bin"
